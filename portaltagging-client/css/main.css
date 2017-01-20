@@ -1,0 +1,80 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+html,body{
+    height:100%;
+}
+
+#container{
+    /*margin:0 auto;*/
+    padding:5px;
+    height:100%;
+    overflow: auto;
+    border:1px solid green;
+}
+
+#header{
+
+}
+
+.content{
+    margin:2px auto;
+    min-height: 800px;
+    border:1px solid red;
+    text-align: center;
+}
+
+#footer{
+    height:30px;
+    text-align: center;
+    color: white;
+    background-color: RGB(50,64,87);
+}
+
+.tagmanage-btngroup,.tagrelation-btngroup{
+    padding:10px 0;
+}
+
+.tagmanage-newtagdialog,.tagrelation-logindialog{
+    text-align: left;
+}
+
+#tagtree{
+    margin:0 auto;
+    max-width: 80%;
+    min-width:600px;
+    text-align: left;
+}
+/*tagrelation*/
+#tagrelationtree{
+    padding:0 10px;
+    text-align: left;
+    float:left;
+    width:500px;
+    max-width: 40%;
+}
+
+#tagrelationtable{
+    width: 800px;
+    max-width: 60%;
+    float:left;
+}
+#tagrelationtable:after{
+    clear:left;
+}
+.grid-content {
+    border-radius: 4px;
+    min-height: 300px;
+}
+
+#tagrelationtable{
+    width: 100%;
+}
+
+.tagrelation-pager{
+    text-align: left;
+}
+

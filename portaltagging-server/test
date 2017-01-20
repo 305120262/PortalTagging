@@ -1,0 +1,6 @@
+curl -H "Content-type: application/json" -X POST -d "{\"name\":\"QEr\"}" http://localhost:3000/portaltags
+
+addTagView
+curl -H "Content-type: application/json;charset=UTF-8" -X POST -d "{\"name\":\"测绘分类方案\",\"type\":\"tagView\"}" http://localhost:3000/portaltags
+
+58526c2fb891e833682075ff

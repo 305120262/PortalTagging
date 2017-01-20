@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal标签管理系统</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <el-menu theme="dark" default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+            <el-menu-item index="1">标签创建</el-menu-item>
+            <el-menu-item index="2">标签关联和Items查询</el-menu-item>
+            <!--<el-menu-item index="3">标签查询</el-menu-item>-->
+        </el-menu>
+    </div>
+    <!--标签创建-->
+    <div id="tagmanage" class="content">
+        <div id="tagmanagebtngroup">
+            <el-button-group class="tagmanage-btngroup">
+                <el-button type="primary" icon="document" @click="newTagViewVisible = true">创建新分类方案</el-button>
+                <el-button type="primary" icon="plus" @click="newSubTagVisible = true">增加标签组</el-button>
+                <el-button type="primary" icon="plus" @click="newTagVisible = true">增加标签</el-button>
+                <el-button type="primary" icon="delete" @click="deleteTagBtnHandler">删除节点</el-button>
+               <!-- <el-button type="primary" icon="edit" @click="updateTagNameBtnHandler">修改标签名称</el-button>-->
+            </el-button-group>
+            <!--创建新结构-->
+            <el-dialog class="tagmanage-newtagdialog" title="创建新分类方案" v-model="newTagViewVisible">
+                <el-form :model="form">
+                    <el-form-item label="分类方案名称" :label-width="formLabelWidth">
+                        <el-input v-model="form.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="newTagViewVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addNewTagView">确 定</el-button>
+                </div>
+            </el-dialog>
+            <!--创建新标签组-->
+            <el-dialog class="tagmanage-newtagdialog" title="增加标签组" v-model="newSubTagVisible">
+                <el-form :model="form">
+                    <el-form-item label="标签组名称" :label-width="formLabelWidth">
+                        <el-input v-model="form.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="newSubTagVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addNewSubTag">确 定</el-button>
+                </div>
+            </el-dialog>
+            <!--创建新标签组-->
+            <el-dialog class="tagmanage-newtagdialog" title="增加标签" v-model="newTagVisible">
+                <el-form :model="form">
+                    <el-form-item label="标签名称" :label-width="formLabelWidth">
+                        <el-input v-model="form.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="newTagVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addNewTag">确 定</el-button>
+                </div>
+            </el-dialog>
+            <!--删除节点-->
+            <el-dialog class="tagmanage-newtagdialog" title="删除节点" v-model="deleteTagVisible">
+                <span>请确定是否删除节点：{{deleteTagName}}</span>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="deleteTagVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="deleteTag">确 定</el-button>
+                </div>
+            </el-dialog>
+            <!--修改标签节点名-->
+            <el-dialog class="tagmanage-newtagdialog" title="修改标签名称" v-model="updateTagNameVisible">
+                <el-form :model="form">
+                    <el-form-item label="节点名称" :label-width="formLabelWidth">
+                        <el-input v-model="form.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="newTagVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="updateTagName">确 定</el-button>
+                </div>
+            </el-dialog>
+        </div>
+        <div id="tagtree">
+            <el-tree :data="data" :props="treeProps" default-expand-all expand-on-click-node highlight-current @node-click="handleNodeClick"></el-tree>
+        </div>
+    </div>
+    <!--标签关联-->
+    <div id="tagrelation" class="content">
+        <div id="tagrelationbtngroup">
+            <el-button-group class="tagrelation-btngroup">
+                <el-button type="primary" icon="document" @click="loginDlgVisible = true">Portal登陆</el-button>
+                <el-button type="primary" icon="document" @click="reloadItemsBtnHandler">重新读取Items</el-button>
+                <el-button type="primary" icon="plus" @click="setRelationBtnHandler">建立关联</el-button>
+                <el-button type="primary" icon="delete" @click="searchRelationBtnHandler">查询Items</el-button>
+               <!-- <el-button type="primary" icon="delete" @click="removeRelationBtnHandler">移除关联</el-button>-->
+            </el-button-group>
+            <!--登陆portal-->
+            <el-dialog class="tagrelation-logindialog" title="登陆Portal" v-model="loginDlgVisible">
+                <el-form :model="form">
+                    <el-form-item label="用户名：" :label-width="formLabelWidth">
+                        <el-input v-model="form.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码：" :label-width="formLabelWidth">
+                        <el-input  type="password" v-model="form.password" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="loginDlgVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="loginPortalDlg">确 定</el-button>
+                </div>
+            </el-dialog>
+        </div>
+        <div id="tagrelationtree" class="grid-content">
+            <el-tree :data="data" :props="treeProps" show-checkbox highlight-current  @node-click="handleNodeClick"></el-tree>
+        </div>
+        <div id="tagrelationtable" class="grid-content">
+            <template>
+                <el-table ref="table" :data="tableData" border @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55">
+                    </el-table-column>
+                    <el-table-column prop="title" label="标题" width="120">
+                    </el-table-column>
+                    <el-table-column prop="type" label="类型" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column prop="tags" label="标签" show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>
+            </template>
+            <el-pagination class="tagrelation-pager" v-bind:current-Page="pageIndex" v-bind:page-size="pageSize" :total="total"
+                           layout="total,sizes,prev,pager,next,jumper" v-bind:page-sizes="pageSizes"
+                           v-on:size-change="sizeChange" v-on:current-change="pageIndexChange">
+
+            </el-pagination>
+        </div>
+    </div>
+    <!--标签查询-->
+    <div id="tagsearch" class="content">
+        <p>查询功能</p>
+    </div>
+    <div id="footer">
+        <p>页脚内容</p>
+    </div>
+</div>
+</body>
+<!-- 先引入 Vue -->
+<script src="libs/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="libs/vue/index.js"></script>
+<script src="libs/vue/vue-resource.min.js"></script>
+<script>
+    dojoConfig = {
+        isDebug: false,
+        parseOnLoad: true,
+        baseUrl: './libs/dojo',
+        packages: [{
+            name: "portal-js",
+            location: "portal-js"
+        }]
+    };
+</script>
+<script src="//localhost/scripts/dojoweb/js/dojohome/dojo/dojo.js"></script>
+<script src="js/TreeControler.js"></script>
+<script src="js/main.js"></script>
+</html>
+
+<!--
+http://www.cnblogs.com/keepfool/p/5690366.html
+
+http://element.eleme.io/#/zh-CN/component/menu
+http://cn.vuejs.org/v2/guide/routing.html#官方路由
+
+-->
