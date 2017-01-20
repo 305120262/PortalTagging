@@ -9,6 +9,6 @@
 
 ## 截图 
 
-[概念](https://github.com/305120262/PortalTagging/raw/master/snapshots/concepts.png "概念")
+![概念](https://github.com/305120262/PortalTagging/raw/master/snapshots/concepts.png "概念")
 
-[截图](https://github.com/305120262/PortalTagging/raw/master/snapshots/demo1.png "截图")
+![截图](https://github.com/305120262/PortalTagging/raw/master/snapshots/demo1.png "截图")
